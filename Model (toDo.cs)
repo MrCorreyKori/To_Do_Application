@@ -1,0 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace My_application.Model
+{
+    public class toDo
+    {
+        [Key]
+        public int id { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+    }
+}
