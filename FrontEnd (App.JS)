@@ -1,0 +1,11 @@
+import MyApplication from './components/MyApplication';
+
+function App() {
+  return (
+    <div >
+        <MyApplication/>
+    </div>
+  );
+}
+
+export default App;
