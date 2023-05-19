@@ -1,0 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+
+namespace My_application.Model
+{
+    public class toDo_DbContext : DbContext
+    {
+        public toDo_DbContext(DbContextOptions<toDo_DbContext> options) : base(options)
+        {
+
+        }
+        public DbSet<toDo> to_Dos { get; set; }
+
+    }
+}
