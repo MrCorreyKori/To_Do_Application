@@ -1,0 +1,196 @@
+
+import axios from "axios";
+import { useEffect,useState } from "react";
+
+
+function MyApplication() {
+
+//-------------------------------3 fields we have--------------------------//
+const [id, setId] = useState("");
+const [Title, setTitle] = useState("");
+const [Description, setDescription] = useState("");
+//----------------------------------------------------------------------//
+const [toDo, setList] = useState([]);
+
+      useEffect(() => {
+        (async () => await Load())();
+      }, []);
+      //-------------------------------Read Function--------------------------------//
+      async function Load() {
+        
+        const result = await axios.get("https://localhost:7016/api/toDo/Get");
+        setList(result.data);
+        console.log(result.data);
+      }
+
+      //----------------------------Create Function------------------------------//
+      async function save(event) {
+      
+        event.preventDefault();
+        try {
+          await axios.post("https://localhost:7016/api/toDo/Add", {
+            
+            Title: Title,                               //backend var
+            Description: Description,  
+          
+          });
+          alert("Task Added Succesful");
+              setId("");
+              setTitle("");
+              setDescription("");
+          
+        
+          Load();
+        } catch (err) {
+          alert(err);
+        }
+      }
+     
+      
+      async function edit(toDo) {
+        setTitle(toDo.Title);
+        setDescription(toDo.Description);
+      
+        setId(toDo.id);
+      }
+     
+
+      //--------------------------------------Delete Function-------------------------------------//
+      async function Delete(id) {
+      await axios.delete("https://localhost:7016/api/toDo/Delete/" + id);
+       alert("Task deleted Successfully");
+       setId("");
+       setTitle("");
+       setDescription("");
+       Load();
+      }
+
+      //---------------------------------------Edit Function------------------------------------//
+     
+      async function update(event) {
+        event.preventDefault();
+        try {
+     
+      await axios.patch("
+https://localhost:7016/api/toDo/Edit/"+ students.find((u) => u.id === id).id || id,
+            {
+            id: id,
+            Title: Title,                                               
+            Description: Description,
+     
+            }
+          );
+          alert("Task updated");
+          setId("");
+          setTitle("");
+          setDescription("");
+        
+          Load();
+        } catch (err) {
+          alert(err);
+        }
+      }
+
+//------------------------------------------------------------------------------------------//
+    return (
+        <div>
+        <h1>To-Do Application</h1>
+      <div className="container mt-4">
+        <form>
+          <div className="form-group">
+          
+            <input
+              type="text"
+              className="form-control"
+              id="id"
+              hidden
+              value={id}
+              onChange={(event) => {
+                setId(event.target.value);
+              }}
+            />
+ 
+            <label>Title</label>
+            <input
+              type="text"
+              className="form-control"
+              id="stname"
+              value={Title}
+              onChange={(event) => {
+                setName(event.target.value);
+              }}
+            />
+          </div>
+          <div className="form-group">
+            <label>Description</label>
+            <input
+              type="text"
+              className="form-control"
+              id="course"
+              value={Description}
+              onChange={(event) => {
+                setCourse(event.target.value);
+              }}
+            />
+          </div>
+          <div>
+            <button className="btn btn-primary mt-4" onClick={save}>
+              Create
+            </button>
+            <button className="btn btn-warning mt-4" onClick={update}>
+              Edit
+            </button>
+          </div>
+        </form>
+      </div>
+      <br></br>
+
+
+      <table className="table table-dark" align="center">
+        <thead>
+          <tr>
+            <th scope="col">Sr No.</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+        
+            <th scope="col">Option</th>
+          </tr>
+        </thead>
+        {toDo.map(function fn(toDo) {
+          return (
+            <tbody>
+              <tr>
+                <th scope="row">{toDo.id} </th>
+                <td>{toDo.Title}</td>
+                <td>{toDo.Description}</td>
+                
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-warning"
+                    onClick={() => edit(toDo)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => Delete(toDo.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          );
+        })}
+      </table>
+        
+
+
+      </div>
+    );
+  }
+  
+  export default StudentCrud;
+  
