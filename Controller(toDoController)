@@ -1,0 +1,73 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using My_application.Model;
+
+namespace My_application.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class toDoController : ControllerBase
+    {
+
+        private readonly toDo_DbContext _Database;
+
+        //Constructor Which takes StudentDbContext (This is class where we conneected DB)as argument
+        public toDoController(toDo_DbContext ToDoController)
+        {
+            _Database = ToDoController;
+        }
+
+
+        //----------------------------Read METHOD-----------------------//
+        [HttpGet]
+        [Route("Get")]
+        public async Task<IEnumerable<toDo>> GetToDo()
+        {
+            return await _Database.to_Dos.ToListAsync();
+        }
+
+        //------------------------Craete METHOD-------------------------//
+        [HttpPost]
+        [Route("Add")]
+        public async Task<toDo> AddToDO(toDo objToDo)     
+        {
+            _Database.to_Dos.Add(objToDo);
+            await _Database.SaveChangesAsync();
+            return objToDo;
+        }
+
+        //----------------Edit----------------------//
+
+        [HttpPatch]
+        [Route("Edit/{id}")]
+        public async Task<toDo> Edit (toDo objToDo)
+        {
+            _Database.Entry(objToDo).State = EntityState.Modified;
+            await _Database.SaveChangesAsync();
+            return objToDo;
+        }
+
+        //------------------Delete------------------------**//
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public bool Delete(int id)
+        {
+            bool a = false;
+            var id_v = _Database.to_Dos.Find(id);
+            
+            if (id_v != null)
+            {
+                a = true;
+                _Database.Entry(id_v).State = EntityState.Modified;
+                _Database.SaveChangesAsync();
+            }
+            else
+            {
+                a = false;  
+            }
+            return a;
+           
+        }
+    }
+}
